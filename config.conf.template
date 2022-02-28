@@ -1,0 +1,5 @@
+# credentials to use Contabo API
+CLIENT_ID=<my-ID-client>
+CLIENT_SECRET=<my-client-secret>
+API_USER=<my-contabo-API-username>
+API_PASSWORD='<my-contabo-API-password>'
