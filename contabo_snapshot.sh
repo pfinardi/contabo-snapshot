@@ -16,9 +16,9 @@ instances=($(curl -X GET 'https://api.contabo.com/v1/compute/instances' -H 'Cont
 
 # for each instance, delete the oldest snapshot and create new snapshot named with timestamp
 for i in "${instances[@]}"; do
-  OLDEST_SNAPSHOT=$(curl -X GET 'https://api.contabo.com/v1/compute/instances/'$i'/snapshots' -H 'Content-Type: application/json' -H "Authorization: Bearer ${ACCESS_TOKEN}" -H 'x-request-id: 04e0f898-37b4-48bc-a794-1a57abe6aa31' -H 'x-trace-id: 123213' |jq '.data'| jq -r '.[0].snapshotId')
-  curl -X DELETE 'https://api.contabo.com/v1/compute/instances/'$i'/snapshots/'$OLDEST_SNAPSHOT -H 'Content-Type: application/json' -H "Authorization: Bearer ${ACCESS_TOKEN}" -H 'x-request-id: 04e0f898-37b4-48bc-a794-1a57abe6aa31' -H 'x-trace-id: 123213'
-  curl -X POST 'https://api.contabo.com/v1/compute/instances/'$i'/snapshots' -H 'Content-Type: application/json' -H "Authorization: Bearer ${ACCESS_TOKEN}" -H 'x-request-id: 04e0f898-37b4-48bc-a794-1a57abe6aa31' -H 'x-trace-id: 123213' -d '{"name":"'"$timestamp"'","description":"Snapshot-Description"}'
+  OLDEST_SNAPSHOT=$(curl -X GET "https://api.contabo.com/v1/compute/instances/${i}/snapshots" -H 'Content-Type: application/json' -H "Authorization: Bearer ${ACCESS_TOKEN}" -H 'x-request-id: 04e0f898-37b4-48bc-a794-1a57abe6aa31' -H 'x-trace-id: 123213' |jq '.data'| jq -r '.[0].snapshotId')
+  curl -X DELETE "https://api.contabo.com/v1/compute/instances/${i}/snapshots/${OLDEST_SNAPSHOT}" -H 'Content-Type: application/json' -H "Authorization: Bearer ${ACCESS_TOKEN}" -H 'x-request-id: 04e0f898-37b4-48bc-a794-1a57abe6aa31' -H 'x-trace-id: 123213'
+  curl -X POST "https://api.contabo.com/v1/compute/instances/${i}/snapshots" -H 'Content-Type: application/json' -H "Authorization: Bearer ${ACCESS_TOKEN}" -H 'x-request-id: 04e0f898-37b4-48bc-a794-1a57abe6aa31' -H 'x-trace-id: 123213' -d '{"name":"'"$timestamp"'","description":"Snapshot-Description"}'
 done
 
 exit 0
