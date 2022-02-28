@@ -21,11 +21,11 @@ instances=($(curl -X GET 'https://api.contabo.com/v1/compute/instances' -H 'Cont
 # for each instance, delete the oldest snapshot and create new snapshot named with timestamp
 for i in "${instances[@]}"; do
   UUID=$(uuidgen)
-  OLDEST_SNAPSHOT=$(curl -X GET 'https://api.contabo.com/v1/compute/instances/'$i'/snapshots' -H 'Content-Type: application/json' -H "Authorization: Bearer ${ACCESS_TOKEN}" -H "x-request-id: ${UUID}" -H "x-trace-id: ${TRACE_ID}" |jq '.data'| jq -r '.[0].snapshotId')
+  OLDEST_SNAPSHOT=$(curl -X GET "https://api.contabo.com/v1/compute/instances/${i}/snapshots" -H 'Content-Type: application/json' -H "Authorization: Bearer ${ACCESS_TOKEN}" -H "x-request-id: ${UUID}" -H "x-trace-id: ${TRACE_ID}" |jq '.data'| jq -r '.[0].snapshotId')
   UUID=$(uuidgen)
-  curl -X DELETE 'https://api.contabo.com/v1/compute/instances/'$i'/snapshots/'$OLDEST_SNAPSHOT -H 'Content-Type: application/json' -H "Authorization: Bearer ${ACCESS_TOKEN}" -H "x-request-id: ${UUID}" -H "x-trace-id: ${TRACE_ID}"
+  curl -X DELETE "https://api.contabo.com/v1/compute/instances/${i}/snapshots/${OLDEST_SNAPSHOT}" -H 'Content-Type: application/json' -H "Authorization: Bearer ${ACCESS_TOKEN}" -H "x-request-id: ${UUID}" -H "x-trace-id: ${TRACE_ID}"
   UUID=$(uuidgen)
-  curl -X POST 'https://api.contabo.com/v1/compute/instances/'$i'/snapshots' -H 'Content-Type: application/json' -H "Authorization: Bearer ${ACCESS_TOKEN}" -H "x-request-id: ${UUID}" -H "x-trace-id: ${TRACE_ID}" -d '{"name":"'"$timestamp"'","description":"Snapshot-Description"}'
+  curl -X POST "https://api.contabo.com/v1/compute/instances/${i}/snapshots" -H 'Content-Type: application/json' -H "Authorization: Bearer ${ACCESS_TOKEN}" -H "x-request-id: ${UUID}" -H "x-trace-id: ${TRACE_ID}" -d '{"name":"'"$timestamp"'","description":"Snapshot-Description"}'
 done
 
 exit 0
